@@ -1,0 +1,93 @@
+#Funções
+def myFunc(e):
+    return float(e[1])
+    "Retorna a segunda entrada de uma lista em float"
+
+
+def btomb(bytes_usuario):
+    return round(bytes_usuario/(1024*1024),2)
+
+
+def porcentagem(bytes_usuario,bytes_total):
+    return round((bytes_usuario/bytes_total*100),2)
+
+#Variáveis
+número_de_usuarios = -1
+total_de_bytes=0
+
+#Tratando o arquivo 'Usuarios.txt'
+dados = open('Usuarios.txt').readlines()
+matriz = [x.split('      ') for x in dados]
+matriz.sort(reverse=True,key=myFunc)
+
+#Achando o espaço total de disco utilizado
+for y in matriz:
+    total_de_bytes+=float(y[1])
+
+espaco_medio = total_de_bytes / len(matriz)
+
+#Tratando os dados de 'Usuarios.txt'
+print('Digite um número entre 1 e '+str(len(matriz)))
+while número_de_usuarios == -1:
+    try:
+        número_de_usuarios = int(input('Quantos usuários gostaria de ver? '))
+    except ValueError:
+        número_de_usuarios = -1
+    if (número_de_usuarios<=len(matriz)) and (número_de_usuarios>=0):
+        print('ACME Inc.\t\t Uso de espaço em disco pelos usuários')
+        print("-"*70)
+        print('Nr.\tUsuário\t\tEspaço utilizado\t% do uso\n')
+        
+        relatorio = open('relatório_organizado.txt','w')
+        relatorio.write('ACME Inc.\t\t Uso de espaco em disco pelos usuarios\n')
+        relatorio.write('-'*70)
+        relatorio.write('\nNr.\tUsuario\t\tEspaco utilizado\t% do uso\n\n')
+        for y in range(int(número_de_usuarios)):
+            if (len(matriz[y][0])<8):
+                if len(str(btomb(float(matriz[y][1]))))<5:
+                    print(str(matriz.index(matriz[y])+1)+'\t'+matriz[y][0]
+                          +'\t\t'+str(btomb(float(matriz[y][1])))
+                          +' MB\t\t\t'+str(porcentagem(float(matriz[y][1]),total_de_bytes))
+                          +'%')
+                    relatorio.write(str(matriz.index(matriz[y])+1)+'\t'+matriz[y][0]
+                          +'\t\t'+str(btomb(float(matriz[y][1])))
+                          +' MB\t\t\t\t'+str(porcentagem(float(matriz[y][1]),total_de_bytes))
+                          +'%\n')
+                else:
+                    print(str(matriz.index(matriz[y])+1)+'\t'+matriz[y][0]
+                          +'\t\t'+str(btomb(float(matriz[y][1])))
+                          +' MB\t\t'+str(porcentagem(float(matriz[y][1]),total_de_bytes))
+                          +'%')
+                    relatorio.write(str(matriz.index(matriz[y])+1)+'\t'+matriz[y][0]
+                          +'\t\t'+str(btomb(float(matriz[y][1])))
+                          +' MB\t\t\t'+str(porcentagem(float(matriz[y][1]),total_de_bytes))
+                          +'%\n')
+            else:
+                if (len(matriz[y][1])<8):
+                    print(str(matriz.index(matriz[y])+1)+'\t'+matriz[y][0]
+                          +'\t'+str(btomb(float(matriz[y][1])))
+                          +' MB\t\t\t'+str(porcentagem(float(matriz[y][1]),total_de_bytes))
+                          +'%')
+                    relatorio.write(str(matriz.index(matriz[y])+1)+'\t'+matriz[y][0]
+                          +'\t'+str(btomb(float(matriz[y][1])))
+                          +' MB\t\t\t\t'+str(porcentagem(float(matriz[y][1]),total_de_bytes))
+                          +'%\n')
+                else:
+                    print(str(matriz.index(matriz[y])+1)+'\t'+matriz[y][0]
+                          +'\t'+str(btomb(float(matriz[y][1])))
+                          +' MB\t\t'+str(porcentagem(float(matriz[y][1]),total_de_bytes))
+                          +'%')
+                    relatorio.write(str(matriz.index(matriz[y])+1)+'\t'+matriz[y][0]
+                          +'\t'+str(btomb(float(matriz[y][1])))
+                          +' MB\t\t\t'+str(porcentagem(float(matriz[y][1]),total_de_bytes))
+                          +'%\n')
+    else:
+        número_de_usuarios = -1
+        print('Por favor, digite um número entre 1 e '+str(len(matriz)))
+                    
+print('\nEspaço total ocupado: '+str(btomb(total_de_bytes))+' MB')
+print('Espaço médio ocupado: '+str(btomb(espaco_medio))+' MB')
+
+relatorio.write('\nEspaco total ocupado: '+str(btomb(total_de_bytes))+' MB\n')
+relatorio.write('Espaco medio ocupado: '+str(btomb(espaco_medio))+' MB')
+relatorio.close()
