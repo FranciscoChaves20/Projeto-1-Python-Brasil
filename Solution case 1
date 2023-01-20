@@ -1,0 +1,46 @@
+def btomb(kb_usuario):
+    return round(kb_usuario/(1024*1024),2)
+    "Convert byte to mb"
+
+
+def porcentagem(kb_usuario,kb_total):
+    return round((kb_usuario/kb_total*100),2)
+    "Gives the percentage of storage (in bytes) used by user"
+
+
+relatorio = open('Usuarios.txt').readlines()
+
+matriz = [x.split('      ') for x in relatorio]
+
+total_de_bytes = 0
+
+for y in matriz:
+    total_de_bytes+=float(y[1])
+
+print('ACME Inc.\t\t Uso de espaço em disco pelos usuários')
+print("-"*70)
+print('Nr.\tUsuário\t\tEspaço utilizado\t% do uso')
+
+for y in matriz:
+    if (len(y[0])<8):
+        if len(str(btomb(float(y[1]))))<5:
+            print(str(matriz.index(y))+'\t'+y[0]
+                  +'\t\t'+str(btomb(float(y[1])))
+                  +' MB\t\t\t'+str(porcentagem(float(y[1]),total_de_bytes))
+                  +'%')
+        else:
+            print(str(matriz.index(y))+'\t'+y[0]
+                  +'\t\t'+str(btomb(float(y[1])))
+                  +' MB\t\t'+str(porcentagem(float(y[1]),total_de_bytes))
+                  +'%')
+    else:
+        if (len(y[1])<8):
+            print(str(matriz.index(y))+'\t'+y[0]
+                  +'\t'+str(btomb(float(y[1])))
+                  +' MB\t\t\t'+str(porcentagem(float(y[1]),total_de_bytes))
+                  +'%')
+        else:
+            print(str(matriz.index(y))+'\t'+y[0]
+                  +'\t'+str(btomb(float(y[1])))
+                  +' MB\t\t'+str(porcentagem(float(y[1]),total_de_bytes))
+                  +'%')
